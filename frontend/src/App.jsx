@@ -1,14 +1,61 @@
-import {react} from 'react'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { CContainer } from '@coreui/react';
+import Sidebar from './components/layout/Sidebar';
+import Header from './components/layout/Header';
+import Overview from './pages/Overview';
+import EducationManagement from './pages/EducationManagement';
+import PersonalizedLearning from './pages/PersonalizedLearning';
+import ScrollToTopButton from './components/common/ScrollToTopButton';
 
+function MainLayout() {
+  const location = useLocation();
 
-function App() {
-  const [count, setCount] = useState(0)
+  // Mapping URL path to title
+  const getTitle = (pathname) => {
+    switch (pathname) {
+      case '/':
+        return 'OVERVIEW DATASET';
+      case '/education':
+        return 'EDUCATION MANAGEMENT';
+      case '/learning':
+        return 'PERSIONALIZED LEARNING';
+      default:
+        return '';
+    }
+  };
+
+  const title = getTitle(location.pathname);
 
   return (
-    <>
+    <div style={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Sidebar */}
+      <div style={{ width: '240px', flexShrink: 0, position: 'sticky', top: 0, height: '100vh' }}>
+        <Sidebar />
+      </div>
 
-    </>
-  )
+      {/* Main Content */}
+      <main style={{ flexGrow: 1, overflowY: 'auto' }}>
+        <Header title={title} />
+        <CContainer>
+          <Routes>
+            <Route path="/" element={<Overview />} />
+            <Route path="/education" element={<EducationManagement />} />
+            <Route path="/learning" element={<PersonalizedLearning />} />
+          </Routes>
+        </CContainer>
+        <ScrollToTopButton />
+      </main>
+    </div>
+  );
 }
 
-export default App
+function App() {
+  return (
+    <Router>
+      <MainLayout />
+    </Router>
+  );
+}
+
+export default App;
