@@ -72,7 +72,7 @@ const Overview = () => {
   );
 
   const chartData = {
-    labels: datasetFiles.map((file) => file.dataset_name),
+    labels: datasetFiles.map((file) => file.File),
     datasets: [
       {
         label: "Missing values (%)",
