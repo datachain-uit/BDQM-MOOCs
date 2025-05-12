@@ -4,7 +4,8 @@ import FileDetails from "../components/FileDetails";
 import DataChart from "../components/DataChart";
 import Header from "../components/Header";
 import SearchBar from "../components/Search";
-import "./Overview.css";  // Import file CSS để áp dụng styles
+// import "./Overview.css"; 
+import "../styles/Overview.css"
 
 const Overview = () => {
   const datasetFiles = [

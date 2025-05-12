@@ -7,4 +7,6 @@ PyJWT
 pytz
 sqlparse
 psycopg2-binary
-python-dotenvdjan
+python-dotenv
+django-mongodb-backend
+djongo

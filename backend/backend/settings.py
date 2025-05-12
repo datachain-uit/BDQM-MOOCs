@@ -11,6 +11,16 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
+from dotenv import load_dotenv
+from urllib.parse import quote_plus
+import os
+
+username = quote_plus(os.getenv("MONGO_USERNAME", "vietkha1975"))
+password = quote_plus(os.getenv("MONGO_PASSWORD", "Kha22112003@"))
+host = os.getenv("MONGO_HOST", "ds317.o9qaf.mongodb.net")
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +35,21 @@ SECRET_KEY = 'django-insecure-rsk%3jyv&%yjizj--ukxws_!dfbtd)(he-s!6&jkgirlza&)^p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    # "DEFAULT_PERMISSION_CLASSES": [
+    #     "rest_framework.permissions.IsAuthenticated",
+    # ],
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
 
 
 # Application definition
@@ -37,6 +61,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "api",
+    'rest_framework',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -47,6 +74,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -74,8 +102,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': 'KhoaLuan_Demo',
+        'ENFORCE_SCHEMA': False,
+        'CLIENT': {
+            'host': f'mongodb+srv://{username}:{password}@{host}/KhoaLuan_Demo?retryWrites=true&w=majority'
+        }
     }
 }
 
@@ -120,3 +152,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWS_CREDENTIALS = True
