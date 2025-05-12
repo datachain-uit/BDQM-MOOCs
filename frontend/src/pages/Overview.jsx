@@ -1,31 +1,57 @@
-import React from "react";
 import FileTable from "../components/FileTable";
 import FileDetails from "../components/FileDetails";
 import DataChart from "../components/DataChart";
 import Header from "../components/Header";
 import SearchBar from "../components/Search";
-// import "./Overview.css"; 
-import "../styles/Overview.css"
+import React, { useState, useEffect } from "react";
+// import "./Overview.css";
+import "../styles/Overview.css";
 
 const Overview = () => {
-  const datasetFiles = [
-    { file: "website.net", missing: "84%", rows: 4321, cols: 13, duplicates: 13 },
-    { file: "website.net", missing: "8%", rows: 4033, cols: 16, duplicates: 14 },
-    { file: "website.net", missing: "8%", rows: 3128, cols: 8, duplicates: 8 },
-    { file: "website.net", missing: "8%", rows: 2104, cols: 7, duplicates: 7 },
-    { file: "website.net", missing: "8%", rows: 2003, cols: 10, duplicates: 10 },
-    { file: "website.net", missing: "8%", rows: 1894, cols: 11, duplicates: 11 },
-    { file: "website.net", missing: "8%", rows: 405, cols: 9, duplicates: 9 },
-    { file: "website.net", missing: "84%", rows: 4321, cols: 13, duplicates: 13 },
-    { file: "website.net", missing: "8%", rows: 4033, cols: 16, duplicates: 14 },
-    { file: "website.net", missing: "8%", rows: 3128, cols: 8, duplicates: 8 },
-    { file: "website.net", missing: "8%", rows: 2104, cols: 7, duplicates: 7 },
-    { file: "website.net", missing: "8%", rows: 2003, cols: 10, duplicates: 10 },
-    { file: "website.net", missing: "8%", rows: 1894, cols: 11, duplicates: 11 },
-    { file: "website.net", missing: "8%", rows: 405, cols: 9, duplicates: 9 },
-  ];
+  // Khai báo state để lưu trữ dữ liệu lấy từ API
+  const [datasetFiles, setDatasetFiles] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8000/api/datapropertise/"
+        );
+        const result = await response.json();
+        setDatasetFiles(result.data);
+
+        // Chọn file đầu tiên làm mặc định (tuỳ chọn)
+        if (result.data.length > 0) {
+          setSelectedFile(result.data[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Hàm xử lý khi click vào một dòng
+  const handleRowClick = (file) => {
+    setSelectedFile(file);
+  };
+
+  // Tạo dữ liệu chi tiết từ file được chọn
+  const detailData1 = selectedFile
+    ? [
+        ["Dataset name", selectedFile.dataset_name],
+        ["Rows", selectedFile.num_rows.toLocaleString()],
+        ["Columns", selectedFile.num_column],
+        ["Duplications", selectedFile.num_duplicates.toLocaleString()],
+        ["Missing values", selectedFile.missing_value_rate],
+        ["Datatype", selectedFile.data_types.join(", ")],
+      ]
+    : [];
 
   const detailData = [
+    ["File Name", "Concepts"],
     ["Rows", 13],
     ["Columns", 16],
     ["Duplications", 8],
@@ -35,12 +61,22 @@ const Overview = () => {
     ["Descriptive Statistics", "N/A"],
   ];
 
+  // Hàm convert từ string "%" sang float
+  const parseMissingRate = (rateString) => {
+    if (!rateString) return 0;
+    return parseFloat(rateString.replace("%", "")) || 0;
+  };
+
+  const allMissingRates = datasetFiles.map((file) =>
+    parseMissingRate(file.missing_value_rate)
+  );
+
   const chartData = {
-    labels: Array(13).fill(null).map((_, i) => `Cột ${i + 1}`),
+    labels: datasetFiles.map((file) => file.dataset_name),
     datasets: [
       {
-        label: "Missing values",
-        data: [60, 65, 65, 70, 80, 90, 95, 85, 70, 65, 60, 55, 5],
+        label: "Missing values (%)",
+        data: allMissingRates,
         backgroundColor: "rgba(54, 162, 235, 0.6)",
         borderRadius: 5,
       },
@@ -65,7 +101,7 @@ const Overview = () => {
   return (
     <div className="content">
       <div className="header-container">
-          <Header/>
+        <Header />
       </div>
       <div className="main-content-container">
         <div className="file-summary-container">
@@ -78,32 +114,34 @@ const Overview = () => {
             />
           </div>
           <div className="table-dataset">
-          <FileTable datasetFiles={datasetFiles} />
+            <FileTable
+              datasetFiles={datasetFiles}
+              onRowClick={handleRowClick}
+              selectedFile={selectedFile}
+            />
           </div>
-          
         </div>
 
         {/* Detail Section */}
         <div className="file-details-container">
-          <div className = 'detail-dataset'>
+          <div className="detail-dataset">
             <div className="title-detail-dataset">
-            <h2 className="title-text-dataset">DETAIL OF FILE_NAME</h2>
+              <h2 className="title-text-dataset">
+                DETAIL OF {selectedFile?.File || "SELECTED FILE"}
+              </h2>
             </div>
-            
-            <FileDetails detailData={detailData} />
+
+            <FileDetails detailData={detailData1} />
           </div>
-          
-          <div className='missing-values'>
-          <h3 className="title-chart-text">
-            DATA VISUALIZATION CHART
-          </h3>
-          <div className="chart-container">
-            <DataChart chartData={chartData} chartOptions={chartOptions} />
-          </div>
+
+          <div className="missing-values">
+            <h3 className="title-chart-text">DATA VISUALIZATION CHART</h3>
+            <div className="chart-container">
+              <DataChart chartData={chartData} chartOptions={chartOptions} />
+            </div>
           </div>
         </div>
-    </div>
-
+      </div>
     </div>
   );
 };

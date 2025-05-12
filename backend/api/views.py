@@ -6,10 +6,15 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Note
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from .models import TableProperty
 
 @api_view(['GET'])
-def hello_world(request):
-    return Response({"message": "Cố gắng tới cùng!"})
+def get_data_propertise(request):
+    data = list(TableProperty.objects.all().values())
+    return Response({
+        "message": "Dữ liệu từ MongoDB:",
+        "data": data
+    })
 
 # Create your views here.
 
