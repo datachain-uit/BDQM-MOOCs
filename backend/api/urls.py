@@ -4,5 +4,7 @@ from . import views
 urlpatterns = [
     path("notes/", views.NoteListCreate.as_view(), name="note-list"),
     path("notes/delete/<int:pk>/", views.NoteDelete.as_view(), name="delete-note"),
-    path("datapropertise/", views.get_data_propertise, name="hello"),
+    path("datapropertise/", views.get_data_propertise, name="get_data_propertise"),
+    path("metrics/", views.get_quality_metrics, name="get_quality_metrics"),
+    path("student_perf/", views.get_student_perf, name = "student_perf")
 ]

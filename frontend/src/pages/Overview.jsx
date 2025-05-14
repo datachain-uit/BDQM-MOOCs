@@ -50,17 +50,6 @@ const Overview = () => {
       ]
     : [];
 
-  const detailData = [
-    ["File Name", "Concepts"],
-    ["Rows", 13],
-    ["Columns", 16],
-    ["Duplications", 8],
-    ["Label", 7],
-    ["Missing values", 10],
-    ["Datatype", "float, int, category, datetime"],
-    ["Descriptive Statistics", "N/A"],
-  ];
-
   // Hàm convert từ string "%" sang float
   const parseMissingRate = (rateString) => {
     if (!rateString) return 0;

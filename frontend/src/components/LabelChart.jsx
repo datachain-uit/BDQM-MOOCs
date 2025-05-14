@@ -1,5 +1,5 @@
-import React from 'react';
-import { CChart } from '@coreui/react-chartjs';
+import React from "react";
+import { CChart } from "@coreui/react-chartjs";
 import {
   Chart as ChartJS,
   BarElement,
@@ -7,50 +7,50 @@ import {
   LinearScale,
   Tooltip,
   Legend,
-} from 'chart.js';
+} from "chart.js";
 
 // Đăng ký các thành phần cần thiết cho Bar chart
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const LabelBarChart = () => {
+const LabelBarChart = ({ labelData }) => {
+  const labels = [];
+  const percentages = [];
+
+  if (labelData) {
+    Object.values(labelData).forEach((item) => {
+      labels.push(item.name);
+      percentages.push(item.percent);
+    });
+  }
+
+  const pastelColors = ["#FFB3C1", "#A8D8FF", "#FFF3B0", "#B2F7EF", "#D3C0F9"];
+
   const data = {
-    labels: ['A', 'B', 'C', 'D', 'E'],
+    labels,
     datasets: [
-  {
-    label: 'Proportion(%)',
-    data: [10, 20, 30, 25, 15],
-    backgroundColor: [
-      '#FFB3C1', // Hồng pastel
-      '#A8D8FF', // Xanh dương pastel
-      '#FFF3B0', // Vàng pastel
-      '#B2F7EF', // Xanh ngọc pastel
-      '#D3C0F9', // Tím pastel
+      {
+        label: "Proportion (%)",
+        data: percentages,
+        backgroundColor: pastelColors.slice(0, labels.length),
+        borderColor: labels.map(() => "#000000"),
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.6,
+        categoryPercentage: 0.5,
+      },
     ],
-    borderColor: [
-      '#000000', // Viền đen cho tất cả cột
-      '#000000',
-      '#000000',
-      '#000000',
-      '#000000',
-    ],
-    borderWidth: 1.5,
-    borderRadius: 4,
-    barPercentage: 0.6,
-    categoryPercentage: 0.5,
-  },
-],
   };
 
   const options = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        position: "top",
         labels: {
           font: {
-            family: 'Inter',
+            family: "Inter",
             size: 18,
-            weight: 'bold',
+            weight: "bold",
           },
         },
       },
@@ -63,27 +63,28 @@ const LabelBarChart = () => {
     scales: {
       y: {
         beginAtZero: true,
+        max: 100,
         ticks: {
           callback: (value) => `${value}%`,
         },
         title: {
           display: true,
-          text: 'Percentage (%)',
+          text: "Percentage (%)",
           font: {
-            family: 'Inter',
+            family: "Inter",
             size: 14,
-            weight: 'bold',
+            weight: "bold",
           },
         },
       },
       x: {
         title: {
           display: true,
-          text: 'Labels',
+          text: "Labels",
           font: {
-            family: 'Inter',
+            family: "Inter",
             size: 14,
-            weight: 'bold',
+            weight: "bold",
           },
         },
       },

@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Note
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import TableProperty
+from .models import TableProperty, QualityMetricsStudentEducation, StudentPerformance
 
 @api_view(['GET'])
 def get_data_propertise(request):
@@ -15,6 +15,23 @@ def get_data_propertise(request):
         "message": "Dữ liệu từ MongoDB:",
         "data": data
     })
+    
+@api_view(['GET'])
+def get_quality_metrics(request):
+    data = list(QualityMetricsStudentEducation.objects.all().values())
+    return Response({
+        "message": "Dữ liệu từ MongoDB:",
+        "data": data
+    })
+    
+@api_view(['GET'])
+def get_student_perf(request):
+    data = list(StudentPerformance.objects.all().values())
+    return Response({
+        "message": "Dữ liệu từ MongoDB:",
+        "data": data
+    })
+
 
 # Create your views here.
 

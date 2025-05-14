@@ -17,7 +17,31 @@ class TableProperty(models.Model):
     num_rows = models.IntegerField(null=True, blank=True)
     num_column = models.IntegerField(null=True, blank=True)
     num_duplicates = models.IntegerField(null=True, blank=True)
-    data_types = models.JSONField(null=True, blank=True)  # Đảm bảo sử dụng ListField cho dữ liệu dạng danh sách
+    data_types = models.JSONField(null=True, blank=True) 
 
     class Meta:
         db_table = "table_properties"
+
+
+class QualityMetricsStudentEducation(models.Model):
+    dataset = models.CharField(max_length=100)
+    completeness = models.CharField(max_length=10)
+    consistency = models.CharField(max_length=10)
+    evaluation = models.JSONField(default=dict)
+
+    class Meta:
+        db_table = 'quality_metrics_student_education'
+        
+class StudentPerformance(models.Model):
+    dataset = models.CharField(max_length=100)
+    label = models.JSONField(default=dict)
+    missing_value_rate = models.CharField(max_length=20, null=True, blank=True)
+    num_row = models.IntegerField(null=True, blank=True)
+    num_column = models.IntegerField(null=True, blank=True)
+    num_duplicates = models.IntegerField(null=True, blank=True)
+    data_types = models.JSONField(null=True, blank=True)
+    detail_column = models.JSONField(default=dict) 
+    
+    class Meta:
+        db_table = 'raw_data_education'
+    
