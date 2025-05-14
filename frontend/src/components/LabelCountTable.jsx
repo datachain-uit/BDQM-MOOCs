@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   CCard,
   CCardBody,
@@ -8,7 +8,7 @@ import {
   CTableHeaderCell,
   CTableBody,
   CTableDataCell,
-} from '@coreui/react'
+} from "@coreui/react";
 
 const LabelCountTable = ({ labelCounts }) => {
   return (
@@ -18,15 +18,14 @@ const LabelCountTable = ({ labelCounts }) => {
         <CTable
           responsive
           hover
-          style={{ tableLayout: 'fixed', width: '100%' }} // 👈 Chặn tràn, fit nội dung
+          style={{ tableLayout: "fixed", width: "100%" }} // 👈 Chặn tràn, fit nội dung
         >
           <CTableHead className="label-header">
             <CTableRow>
-              <CTableHeaderCell style={{ width: '50%' }}>Label</CTableHeaderCell>
-              <CTableHeaderCell
-                style={{ width: '50%' }}
-                className="text-end"
-              >
+              <CTableHeaderCell style={{ width: "50%" }}>
+                Label
+              </CTableHeaderCell>
+              <CTableHeaderCell style={{ width: "50%" }} className="text-end">
                 Count
               </CTableHeaderCell>
             </CTableRow>
@@ -35,7 +34,9 @@ const LabelCountTable = ({ labelCounts }) => {
             {Object.entries(labelCounts).map(([label, count]) => (
               <CTableRow key={label}>
                 <CTableDataCell>{label}</CTableDataCell>
-                <CTableDataCell className="text-end p-0">{count}</CTableDataCell>
+                <CTableDataCell className="text-end p-0">
+                  {count.toLocaleString()}
+                </CTableDataCell>
                 {/* 👆 Xóa padding phải của ô cuối */}
               </CTableRow>
             ))}
@@ -43,7 +44,7 @@ const LabelCountTable = ({ labelCounts }) => {
         </CTable>
       </CCardBody>
     </CCard>
-  )
-}
+  );
+};
 
-export default LabelCountTable
+export default LabelCountTable;

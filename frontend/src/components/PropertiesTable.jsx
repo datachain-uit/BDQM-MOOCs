@@ -12,7 +12,7 @@ import {
 
 const PropertiesTable = ({ properties }) => {
   const data = [
-    { label: "Rows", value: properties?.num_row || "N/A" },
+    { label: "Rows", value: properties?.num_row.toLocaleString() || "N/A" },
     { label: "Columns", value: properties?.num_column || "N/A" },
     {
       label: "Labels",
