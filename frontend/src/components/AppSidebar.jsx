@@ -23,7 +23,7 @@ const AppSidebar = () => {
           Overview
         </CNavItem>
 
-        <CNavItem className="education-management"href="/education" active={location.pathname === '/education'}>
+        <CNavItem className="education-management" href="/education" active={location.pathname === '/education'}>
           <CIcon customClassName="nav-icon" icon={cilBook} />
           Education Management
         </CNavItem>

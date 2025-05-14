@@ -3,31 +3,9 @@ import AppSidebar from "./components/AppSidebar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Overview from "./pages/Overview";
 import './App.css'
+import Education from "./pages/Education";
 import { color } from "chart.js/helpers";
 
-// function App() {
-//  return (
-//    <Router>
-//      <div className="flex h-screen">
-//       <AppSidebar />
-//        <div className="flex-1 overflow-auto p-4">
-//          <Routes>
-//           <Route path="/" element={<Overview />} />
-//          </Routes>
-//        </div>
-//      </div>
-//    </Router>
-//  );
-// }
-// function App() {
-//   const dummyFiles = [ /* ... */ ]
-
-//   return (
-//     <AppLayout>
-//       <FileTable datasetFiles={dummyFiles} />
-//     </AppLayout>
-//   )
-// }
 const App = () => {
   return (
     <Router>
@@ -60,7 +38,8 @@ const App = () => {
           }}
         >
           <Routes>
-            <Route path="/" element={<Overview />} />
+            <Route path="/" element={<Overview/>} />
+            <Route path="/education" element={<Education />} />
             {/* Các Route khác có thể thêm vào đây */}
           </Routes>
         </div>

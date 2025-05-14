@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import AppSidebar from './AppSidebar'
-import { CContainer, CHeader, CMain, CButton } from '@coreui/react'
+import { CContainer, CHeader, CButton } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilMenu } from '@coreui/icons'
 
@@ -44,9 +44,9 @@ const AppLayout = ({ children }) => {
           <div>Header</div>
         </CHeader>
 
-        <CMain className="px-3 py-2 bg-light" style={{ flex: 1, overflowY: 'auto' }}>
-          <CContainer fluid>{children}</CContainer>
-        </CMain>
+        <CContainer fluid className="mt-4">
+          {children}
+        </CContainer>
       </div>
     </div>
   )
