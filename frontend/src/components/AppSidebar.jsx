@@ -28,7 +28,7 @@ const AppSidebar = () => {
           Education Management
         </CNavItem>
 
-        <CNavItem className="personalized-learning" href="/personalized" active={location.pathname === '/personalized'}>
+        <CNavItem className="personalized-learning" href="/learning" active={location.pathname === '/learning'}>
           <CIcon customClassName="nav-icon" icon={cilSettings} />
           Personalized Learning
         </CNavItem>

@@ -55,14 +55,7 @@ const MemoizedPie = React.memo(({ data }) => (
 // Memoized Bar chart to optimize performance
 const MemoizedBar = React.memo(({ data, options }) => <Bar data={data} options={options} />);
 
-// Static dataset information
-const datasetInfo = {
-  row: 13,
-  column: 16,
-  uniqueRow: 8,
-  missingValues: 10,
-  dataTypes: 'float, int, category, datetime',
-};
+
 
 // Map display keys to datasetInfo keys
 const keyMap = {
@@ -73,114 +66,6 @@ const keyMap = {
   'Data types': 'dataTypes',
 };
 
-// Descriptive statistics for sample columns
-const descriptiveStatistics = {
-  column1: { count: 13, mean: 5.5, std: 2.1, min: 1.0, '25%': 4.0, '50%': 5.5, '75%': 7.0, max: 10.0 },
-  column2: { count: 10, mean: 100.5, std: 15.3, min: 75.0, '25%': 90.0, '50%': 101.0, '75%': 112.0, max: 125.0 },
-  column3: { count: 13, mean: 5.5, std: 2.1, min: 1.0, '25%': 4.0, '50%': 5.5, '75%': 7.0, max: 10.0 },
-  column4: { count: 10, mean: 100.5, std: 15.3, min: 75.0, '25%': 90.0, '50%': 101.0, '75%': 112.0, max: 125.0 },
-};
-
-// Gender distribution pie chart data
-const genderData = {
-  labels: ['Male', 'Female', 'Other'],
-  datasets: [{
-    data: [50, 45, 5],
-    backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
-    hoverBackgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
-  }],
-};
-
-// Top 10 popular fields bar chart data
-const fieldsData = {
-  labels: ['Data Science', 'Web Dev', 'Mobile Dev', 'AI/ML', 'Cybersecurity', 'Cloud Computing', 'DevOps', 'UI/UX Design', 'Networking', 'Bus Analysis'],
-  datasets: [{
-    label: 'Registrations',
-    data: [120, 100, 80, 300, 60, 55, 700, 45, 40, 35],
-    backgroundColor: '#4BC0C0',
-    borderColor: '#4BC0C0',
-    borderWidth: 1,
-  }],
-};
-
-// Reliability evaluation bar chart data
-const reliabilityData = {
-  '@5': { labels: ['CBF', 'DeepFM', 'BPRMF', 'KGAT'], datasets: [{ label: 'MAP', data: [65, 83, 87, 75], backgroundColor: '#0071BC' }] },
-  '@10': { labels: ['CBF', 'DeepFM', 'BPRMF', 'KGAT'], datasets: [{ label: 'MAP', data: [70, 80, 85, 78], backgroundColor: '#0071BC' }] },
-};
-
-// Relevance evaluation bar chart data
-const relevanceData = {
-  '@5': {
-    labels: ['CBF', 'DeepFM', 'BPRMF', 'KGAT'],
-    datasets: [
-      { label: 'Precision', data: [67, 84, 87, 75], backgroundColor: '#0071BC' },
-      { label: 'Recall', data: [82, 69, 71, 63], backgroundColor: '#34A853' },
-      { label: 'NDCG', data: [70, 72, 71, 69], backgroundColor: '#FF6600' },
-    ],
-  },
-  '@10': {
-    labels: ['CBF', 'DeepFM', 'BPRMF', 'KGAT'],
-    datasets: [
-      { label: 'Precision', data: [69, 81, 85, 77], backgroundColor: '#0071BC' },
-      { label: 'Recall', data: [84, 70, 72, 64], backgroundColor: '#34A853' },
-      { label: 'NDCG', data: [73, 74, 73, 71], backgroundColor: '#FF6600' },
-    ],
-  },
-};
-
-// Completeness evaluation data
-const completenessData = {
-  overallPassRate: 100,
-  definition: {
-    title: 'Definition',
-    text: {
-      completeness: { term: 'Completeness:', definition: 'The dataset must contain all necessary information without missing any critical elements.' },
-      approach: { term: 'Measurement approach:', definition: 'Completeness is calculated as the ratio between the number of valid (non-missing) values and the total number of expected values.' },
-    },
-  },
-  errorLog: [
-    'Row 2831: Missing value in `teacher_id`',
-    'Row 1025: Missing value in `course_name`',
-    'Row 1025: Missing value in `course_name`',
-    'Row 2831: Missing value in `teacher_id`',
-    'Row 1025: Missing value in `course_name`',
-    'Row 1025: Missing value in `course_name`',
-  ],
-};
-
-// Consistency evaluation data
-const consistencyData = {
-  overallPassRate: 95,
-  criterionPassRates: [
-    { name: 'Domain Range:', passRate: 100 },
-    { name: 'Non-null:', passRate: 85 },
-    { name: 'Data Type:', passRate: 60 },
-    { name: 'Logical Constraints:', passRate: 30 },
-    { name: 'Uniqueness:', passRate: 30 },
-    { name: 'Foreign Key Integrity:', passRate: 30 },
-  ],
-  definition: {
-    title: 'Definition',
-    text: {
-      intro: "<strong style='font-weight: 600;'>Consistency:</strong> Data must be uniform across different sources and systems, with no conflicts or duplications.",
-      heading: 'Basic Validity Checks:',
-      criteria: [
-        { name: 'Domain Range', description: 'The value must fall within a predefined range.' },
-        { name: 'Non-null', description: 'The value must not be empty or missing.' },
-        { name: 'Data Type', description: 'The value must conform to a specified data type.' },
-        { name: 'Logical Constraints', description: 'The value must satisfy a logical condition.' },
-        { name: 'Uniqueness', description: 'The value must be unique within the dataset.' },
-        { name: 'Foreign Key Integrity', description: 'The value must exist in a valid reference list.' },
-      ],
-    },
-  },
-  errorLog: [
-    'Row 550: Inconsistent date format in `event_date`',
-    'Row 1120: Conflict between `start_time` and `end_time`',
-    'Row 1500: Inconsistent currency code',
-  ],
-};
 
 // Main component for the personalized learning dashboard
 const PersonalizedLearning = () => {
@@ -189,6 +74,125 @@ const PersonalizedLearning = () => {
   const [reliabilityMetric, setReliabilityMetric] = useState('@5');
   const [relevanceMetric, setRelevanceMetric] = useState('@5');
   const [selectedMetric, setSelectedMetric] = useState('completeness');
+
+  // Static dataset information
+  const datasetInfo = {
+    row: 130000,
+    column: 16,
+    uniqueRow: 8,
+    missingValues: 10,
+    dataTypes: 'float, int, category, datetime',
+  };
+
+  // Descriptive statistics for sample columns
+  const descriptiveStatistics = {
+    column1: { count: 13, mean: 5.5, std: 2.1, min: 1.0, '25%': 4.0, '50%': 5.5, '75%': 7.0, max: 10.0 },
+    column2: { count: 10, mean: 100.5, std: 15.3, min: 75.0, '25%': 90.0, '50%': 101.0, '75%': 112.0, max: 125.0 },
+    column3: { count: 13, mean: 5.5, std: 2.1, min: 1.0, '25%': 4.0, '50%': 5.5, '75%': 7.0, max: 10.0 },
+    column4: { count: 10, mean: 100.5, std: 15.3, min: 75.0, '25%': 90.0, '50%': 101.0, '75%': 112.0, max: 125.0 },
+  };
+
+  // Gender distribution pie chart data
+  const genderData = {
+    labels: ['Male', 'Female', 'Other'],
+    datasets: [{
+      data: [50, 45, 5],
+      backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
+      hoverBackgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
+    }],
+  };
+
+
+  // Top 10 popular fields bar chart data
+  const fieldsData = {
+    labels: ['Data Science', 'Web Dev', 'Mobile Dev', 'AI/ML', 'Cybersecurity', 'Cloud Computing', 'DevOps', 'UI/UX Design', 'Networking', 'Bus Analysis'],
+    datasets: [{
+      label: 'Registrations',
+      data: [120, 100, 80, 300, 60, 55, 700, 45, 40, 35],
+      backgroundColor: '#4BC0C0',
+      borderColor: '#4BC0C0',
+      borderWidth: 1,
+    }],
+  };
+
+  // Reliability evaluation bar chart data
+  const reliabilityData = {
+    '@5': { labels: ['CBF', 'DeepFM', 'BPRMF', 'KGAT'], datasets: [{ label: 'MAP', data: [65, 83, 87, 75], backgroundColor: '#0071BC' }] },
+    '@10': { labels: ['CBF', 'DeepFM', 'BPRMF', 'KGAT'], datasets: [{ label: 'MAP', data: [70, 80, 85, 78], backgroundColor: '#0071BC' }] },
+  };
+
+  // Relevance evaluation bar chart data
+  const relevanceData = {
+    '@5': {
+      labels: ['CBF', 'DeepFM', 'BPRMF', 'KGAT'],
+      datasets: [
+        { label: 'Precision', data: [67, 84, 87, 75], backgroundColor: '#0071BC' },
+        { label: 'Recall', data: [82, 69, 71, 63], backgroundColor: '#34A853' },
+        { label: 'NDCG', data: [70, 72, 71, 69], backgroundColor: '#FF6600' },
+      ],
+    },
+    '@10': {
+      labels: ['CBF', 'DeepFM', 'BPRMF', 'KGAT'],
+      datasets: [
+        { label: 'Precision', data: [69, 81, 85, 77], backgroundColor: '#0071BC' },
+        { label: 'Recall', data: [84, 70, 72, 64], backgroundColor: '#34A853' },
+        { label: 'NDCG', data: [73, 74, 73, 71], backgroundColor: '#FF6600' },
+      ],
+    },
+  };
+
+  // Completeness evaluation data
+  const completenessData = {
+    overallPassRate: 100,
+    definition: {
+      title: 'Definition',
+      text: {
+        completeness: { term: 'Completeness:', definition: 'The dataset must contain all necessary information without missing any critical elements.' },
+        approach: { term: 'Measurement approach:', definition: 'Completeness is calculated as the ratio between the number of valid (non-missing) values and the total number of expected values.' },
+      },
+    },
+    errorLog: [
+      'Row 2831: Missing value in `teacher_id`',
+      'Row 1025: Missing value in `course_name`',
+      'Row 1025: Missing value in `course_name`',
+      'Row 2831: Missing value in `teacher_id`',
+      'Row 1025: Missing value in `course_name`',
+      'Row 1025: Missing value in `course_name`',
+    ],
+  };
+
+  // Consistency evaluation data
+  const consistencyData = {
+    overallPassRate: 95,
+    criterionPassRates: [
+      { name: 'Domain Range:', passRate: 100 },
+      { name: 'Non-null:', passRate: 85 },
+      { name: 'Data Type:', passRate: 60 },
+      { name: 'Logical Constraints:', passRate: 30 },
+      { name: 'Uniqueness:', passRate: 30 },
+      { name: 'Foreign Key Integrity:', passRate: 30 },
+    ],
+    definition: {
+      title: 'Definition',
+      text: {
+        intro: "<strong style='font-weight: 600;'>Consistency:</strong> Data must be uniform across different sources and systems, with no conflicts or duplications.",
+        heading: 'Basic Validity Checks:',
+        criteria: [
+          { name: 'Domain Range', description: 'The value must fall within a predefined range.' },
+          { name: 'Non-null', description: 'The value must not be empty or missing.' },
+          { name: 'Data Type', description: 'The value must conform to a specified data type.' },
+          { name: 'Logical Constraints', description: 'The value must satisfy a logical condition.' },
+          { name: 'Uniqueness', description: 'The value must be unique within the dataset.' },
+          { name: 'Foreign Key Integrity', description: 'The value must exist in a valid reference list.' },
+        ],
+      },
+    },
+    errorLog: [
+      'Row 550: Inconsistent date format in `event_date`',
+      'Row 1120: Conflict between `start_time` and `end_time`',
+      'Row 1500: Inconsistent currency code',
+    ],
+  };
 
   // Handle search input changes
   const handleSearchChange = (event) => setSearchTerm(event.target.value);
