@@ -5,8 +5,7 @@ import path from 'path'; // Import the 'path' module
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  server: {
-    port: 3000, // Chạy trên port 3000
+  server: { // Chạy trên port 3000
     allowedHosts: ['demo-2-liv2.onrender.com'],
   },
   resolve: {
