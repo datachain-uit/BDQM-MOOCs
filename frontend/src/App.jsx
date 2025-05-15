@@ -5,6 +5,7 @@ import Overview from "./pages/Overview";
 import './App.css'
 import Education from "./pages/Education";
 import { color } from "chart.js/helpers";
+import PersonalizedLearning from './pages/PersonalizedLearning';
 
 const App = () => {
   return (
@@ -40,7 +41,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Overview/>} />
             <Route path="/education" element={<Education />} />
-            {/* Các Route khác có thể thêm vào đây */}
+            <Route path="/learning" element={<PersonalizedLearning />} />
           </Routes>
         </div>
       </div>
