@@ -28,6 +28,7 @@ class QualityMetricsStudentEducation(models.Model):
     completeness = models.CharField(max_length=10)
     consistency = models.CharField(max_length=10)
     evaluation = models.JSONField(default=dict)
+    performance_model = models.JSONField(default=dict)
 
     class Meta:
         db_table = 'quality_metrics_student_education'

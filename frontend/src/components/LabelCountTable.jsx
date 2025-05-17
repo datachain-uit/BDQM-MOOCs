@@ -18,7 +18,7 @@ const LabelCountTable = ({ labelCounts }) => {
         <CTable
           responsive
           hover
-          style={{ tableLayout: "fixed", width: "100%" }} // 👈 Chặn tràn, fit nội dung
+          style={{ tableLayout: "fixed", width: "100%" }} 
         >
           <CTableHead className="label-header">
             <CTableRow>

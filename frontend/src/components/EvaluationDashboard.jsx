@@ -10,90 +10,177 @@ import {
   CListGroup,
   CListGroupItem,
 } from "@coreui/react";
-import { CChartBar } from "@coreui/react-chartjs";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import React, { useEffect, useRef, useState } from "react";
 
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 const EvaluationDashboard = () => {
   const models = ["4-layer-stacked LSTM", "BiLSTM", "GRU", "RNN"];
-  const [models1, setModels] = useState([]);
-  const [reliabilityData1, setReliabilityData] = useState(null);
-  const [relevanceData1, setRelevanceData] = useState(null);
+  const [direct, setDirect] = useState(null);
+  const [reliabilityData1, setReliabilityData1] = useState(null);
+  const [relevanceData1, setRelevanceData1] = useState(null);
+  const [performance, setPerformance] = useState(null);
+  const pdfRef = useRef();
+
+  const getColor = (index) => {
+    const colors = [
+      "#3366CC",
+      "#DC3912",
+      "#FF9900",
+      "#109618",
+      "#990099",
+      "#0099C6",
+      "#DD4477",
+      "#66AA00",
+      "#B82E2E",
+      "#316395",
+      "#994499",
+      "#22AA99",
+    ];
+    return colors[index % colors.length];
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchData() {
       try {
         const response = await fetch("http://localhost:8000/api/metrics/");
         const result = await response.json();
-        console.log("API Response:", result);
-        console.log(
-          "Is result.data[0] an array?",
-          Array.isArray(result.data[0])
-        );
-        console.log("result.data[5]:", result.data[5]);
 
-        const models1 = ["RNN", "LSTM", "BiLSTM", "GRU"];
-        setModels(models1);
-
-        // Extract values for each metric
-        const accuracyValues = models1.map(
-          (model) => result.data[5]?.evaluation.accuracy[model]
-        );
-        const f1LabelD = models1.map(
-          (model) => result.data[5]?.evaluation.f1_score.label_d[model]
-        );
-        const f1LabelE = models1.map(
-          (model) => result.data[5]?.evaluation.f1_score.label_e[model]
-        );
-
-        const aucLabelD = models1.map(
-          (model) => result.data[5]?.evaluation.auc_roc.label_d[model]
-        );
-        const aucLabelE = models1.map(
-          (model) => result.data[5]?.evaluation.auc_roc.label_e[model]
-        );
-
-        setReliabilityData({
-          labels: models1,
-          datasets: [
-            {
-              label: "Accuracy",
-              backgroundColor: "#4BC0C0",
-              data: accuracyValues.map((v) => v * 100), // scale to percent
-            },
-            {
-              label: "F1-score (label_d)",
-              backgroundColor: "#36A2EB",
-              data: f1LabelD.map((v) => v * 100),
-            },
-            {
-              label: "F1-score (label_e)",
-              backgroundColor: "#FF6384",
-              data: f1LabelE.map((v) => v * 100),
-            },
-          ],
+        const dataset = result.data.map((entry) => entry.dataset);
+        const models = Object.keys(result.data[0]?.evaluation?.accuracy || {});
+        const combinedDatasets = [];
+        const combinedRelevance = [];
+        const combinePerformance = [];
+        const combinedirect = [];
+        combinedirect.push({
+          label: "Completeness",
+          backgroundColor: getColor(0),
+          data: result.data.map((entry) => entry?.completeness ?? 0),
         });
-
-        setRelevanceData({
-          labels: models1,
-          datasets: [
-            {
-              label: "AUC-ROC (label_d)",
-              backgroundColor: "#7C4DFF",
-              data: aucLabelD.map((v) => v * 100),
-            },
-            {
-              label: "AUC-ROC (label_e)",
-              backgroundColor: "#FFB74D",
-              data: aucLabelE.map((v) => v * 100),
-            },
-          ],
+        combinedirect.push({
+          label: "Consistency",
+          backgroundColor: getColor(1),
+          data: result.data.map((entry) => entry?.consistency ?? 0),
         });
+        setDirect({ labels: dataset, datasets: combinedirect });
+
+        models.forEach((model, modelIndex) => {
+          combinePerformance.push({
+            label: `Macro precision - ${model}`,
+            backgroundColor: getColor(modelIndex),
+            data: result.data.map(
+              (entry) =>
+                entry?.performance_model?.marcro?.macro_precision?.[model] ?? 0
+            ),
+          });
+          combinePerformance.push({
+            label: `Macro recall - ${model}`,
+            backgroundColor: getColor(modelIndex),
+            data: result.data.map(
+              (entry) =>
+                entry?.performance_model?.marcro?.macro_recall?.[model] ?? 0
+            ),
+          });
+          combinePerformance.push({
+            label: `Macro F1-score - ${model}`,
+            backgroundColor: getColor(modelIndex),
+            data: result.data.map(
+              (entry) =>
+                entry?.performance_model?.marcro?.macro_f1_score?.[model] ?? 0
+            ),
+          });
+          combinePerformance.push({
+            label: `Weighted precision - ${model}`,
+            backgroundColor: getColor(modelIndex),
+            data: result.data.map(
+              (entry) =>
+                entry?.performance_model?.weighted?.weighted_precision?.[
+                  model
+                ] ?? 0
+            ),
+          });
+          combinePerformance.push({
+            label: `Weighted recall - ${model}`,
+            backgroundColor: getColor(modelIndex),
+            data: result.data.map(
+              (entry) =>
+                entry?.performance_model?.weighted?.weighted_recall?.[model] ??
+                0
+            ),
+          });
+          combinePerformance.push({
+            label: `Weighted F1-score - ${model}`,
+            backgroundColor: getColor(modelIndex),
+            data: result.data.map(
+              (entry) =>
+                entry?.performance_model?.weighted?.weighted_f1_score?.[
+                  model
+                ] ?? 0
+            ),
+          });
+          combinedRelevance.push({
+            label: `AUC-ROC (D) - ${model}`,
+            backgroundColor: getColor(modelIndex),
+            data: result.data.map(
+              (entry) => entry?.evaluation?.auc_roc?.label_d?.[model] ?? 0
+            ),
+          });
+          combinedRelevance.push({
+            label: `AUC-ROC (E) - ${model}`,
+            backgroundColor: getColor(modelIndex),
+            data: result.data.map(
+              (entry) => entry?.evaluation?.auc_roc?.label_e?.[model] ?? 0
+            ),
+          });
+          combinedDatasets.push({
+            label: `Accuracy - ${model}`,
+            backgroundColor: getColor(modelIndex),
+            data: result.data.map(
+              (entry) => entry?.evaluation?.accuracy?.[model] ?? 0
+            ),
+          });
+          combinedDatasets.push({
+            label: `F1-score (D) - ${model}`,
+            backgroundColor: getColor(modelIndex + models.length),
+            data: result.data.map(
+              (entry) => entry?.evaluation?.f1_score?.label_d?.[model] ?? 0
+            ),
+          });
+          combinedDatasets.push({
+            label: `F1-score (E) - ${model}`,
+            backgroundColor: getColor(modelIndex + models.length * 2),
+            data: result.data.map(
+              (entry) => entry?.evaluation?.f1_score?.label_e?.[model] ?? 0
+            ),
+          });
+        });
+        setPerformance({ labels: dataset, datasets: combinePerformance });
+        setRelevanceData1({ labels: dataset, datasets: combinedRelevance });
+        setReliabilityData1({ labels: dataset, datasets: combinedDatasets });
       } catch (error) {
-        console.error("Error fetching evaluation data:", error);
+        console.error("Error fetching data:", error);
       }
-    };
+    }
 
     fetchData();
   }, []);
@@ -110,201 +197,105 @@ const EvaluationDashboard = () => {
       pdf.save("evaluation.pdf");
     });
   };
-  const reliabilityData = {
-    labels: models,
-    datasets: [
-      {
-        label: "Accuracy",
-        backgroundColor: "#4BC0C0",
-        data: [75, 85, 90, 70],
-      },
-      {
-        label: "F1-score",
-        backgroundColor: "#36A2EB",
-        data: [70, 80, 88, 60],
-      },
-    ],
-  };
-
-  const relevanceData = {
-    labels: models,
-    datasets: [
-      {
-        label: "AUC-ROC",
-        backgroundColor: "#007bff",
-        data: [65, 78, 92, 68],
-      },
-    ],
-  };
 
   return (
-    <CRow>
-      {/* DIRECT EVALUATION */}
-      <CCol md={6}>
-        <CCard className="mb-4">
-          <CCardHeader className="direct-evaluation">
-            <strong>DIRECT EVALUATION</strong>
-          </CCardHeader>
+    <>
+      <CCard className="mb-4">
+        <CCardHeader className="direct-evaluation">
+          <strong>DIRECT EVALUATION</strong>
+        </CCardHeader>
+        <CCardBody className="direct-body">
+          {direct && (
+            <Bar
+              data={direct}
+              options={{
+                responsive: true,
+                indexAxis: "y", // ← thêm dòng này để làm biểu đồ nằm ngang
+                plugins: { legend: { position: "bottom" } },
+                scales: {
+                  x: { min: 0, max: 100 }, // vì trục x giờ là trục giá trị
+                  y: { beginAtZero: true },
+                },
+              }}
+            />
+          )}
+        </CCardBody>
+        <CCardBody>
+          {/* progress bar & definitions omitted for brevity */}
+          <div className="export-pdf-container">
+            <CButton
+              color="primary"
+              size="lg"
+              onClick={handleExportPDF}
+              className="button-pdf"
+            >
+              Export to PDF
+            </CButton>
+          </div>
+        </CCardBody>
+      </CCard>
 
-          <CCardBody>
-            {/* Progress Bars */}
-            <div className="progress-bar">
-              <div className="proportion">
-                <span className="left">
-                  <CBadge
-                    color="warning"
-                    shape="rounded-pill"
-                    className="dot-evaluation"
-                  >
-                    ●
-                  </CBadge>
-                  <strong className="complete-title">Completeness:</strong>
-                </span>
-                <span className="right">100%</span>
-              </div>
-              <CProgress
-                value={100}
-                color="success"
-                className="proportion-bar"
-              />
-
-              <div className="proportion">
-                <span className="left">
-                  <CBadge
-                    color="danger"
-                    shape="rounded-pill"
-                    className="dot-evaluation"
-                  >
-                    ●
-                  </CBadge>
-                  <strong className="complete-title">Consistency:</strong>
-                </span>
-                <span className="right">100%</span>
-              </div>
-              <CProgress
-                value={100}
-                color="success"
-                className="proportion-bar"
-              />
-            </div>
-
-            {/* Definition Block */}
-            <div className="bg-light p-3 rounded border mb-4">
-              <h6 className="definition-title">
-                <strong>Definition</strong>
-              </h6>
-              <p
-                className="definition-detail"
-                style={{ marginBottom: "0.5rem" }}
-              >
-                <strong>Completeness:</strong> The dataset must contain all
-                necessary information without missing any critical elements.
-              </p>
-              <p className="definition-detail">
-                <strong>Measurement approach:</strong> Completeness is
-                calculated as the ratio between the number of valid
-                (non-missing) values and the total number of expected values.
-              </p>
-            </div>
-
-            {/* Results Block */}
-            <div className="bg-light p-3 rounded border">
-              <h6 className="result-title">
-                <strong>Results</strong>
-              </h6>
-              <p className="result-detail">
-                <strong>Pass Rate: </strong>
-                <CBadge color="success" shape="rounded-pill">
-                  100%
-                </CBadge>
-              </p>
-              <div className="result-detail">
-                <strong>Error Log:</strong>
-                <CListGroup flush>
-                  <CListGroupItem>
-                    Row 2831: Missing value in{" "}
-                    <code className="id-col">teacher_id</code>
-                  </CListGroupItem>
-                  <CListGroupItem>
-                    Row 1025: Missing value in{" "}
-                    <code className="id-col">course_name</code>
-                  </CListGroupItem>
-                  <CListGroupItem>
-                    Row 1025: Missing value in{" "}
-                    <code className="id-col">course_name</code>
-                  </CListGroupItem>
-                  <CListGroupItem>
-                    Row 1025: Missing value in{" "}
-                    <code className="id-col">course_name</code>
-                  </CListGroupItem>
-                  <CListGroupItem>
-                    Row 2831: Missing value in{" "}
-                    <code className="id-col">teacher_id</code>
-                  </CListGroupItem>
-                  <CListGroupItem>
-                    Row 1025: Missing value in{" "}
-                    <code className="id-col">course_name</code>
-                  </CListGroupItem>
-                  <CListGroupItem>
-                    Row 1025: Missing value in{" "}
-                    <code className="id-col">course_name</code>
-                  </CListGroupItem>
-                  <CListGroupItem>
-                    Row 1025: Missing value in{" "}
-                    <code className="id-col">course_name</code>
-                  </CListGroupItem>
-                </CListGroup>
-              </div>
-            </div>
-            <div className="export-pdf-container">
-              <CButton
-                color="primary"
-                size="lg"
-                onClick={handleExportPDF}
-                className="button-pdf"
-              >
-                Export to PDF
-              </CButton>
-            </div>
-          </CCardBody>
-        </CCard>
-      </CCol>
-
-      {/* INDIRECT EVALUATION */}
-      <CCol className="indirect-container">
-        <CCard className="reliability-chart">
-          <CCardHeader className="indirect-header">
-            INDIRECT EVALUATION - Reliability
-          </CCardHeader>
-          <CCardBody className="indirect-body">
-            <CChartBar
+      {/* INDIRECT EVALUATION - Reliability */}
+      <CCard className="reliability-chart">
+        <CCardHeader className="indirect-header">
+          INDIRECT EVALUATION - Reliability
+        </CCardHeader>
+        <CCardBody className="indirect-body">
+          {reliabilityData1 && (
+            <Bar
               data={reliabilityData1}
               options={{
                 responsive: true,
-                plugins: { legend: { position: "top" } },
-                scales: { y: { min: 0, max: 100 } },
+                plugins: { legend: { position: "bottom" } },
+                scales: {
+                  y: { beginAtZero: true },
+                },
               }}
             />
-          </CCardBody>
-        </CCard>
+          )}
+        </CCardBody>
+      </CCard>
 
-        <CCard className="relevance-chart">
-          <CCardHeader className="indirect-header">
-            INDIRECT EVALUATION - Relevance
-          </CCardHeader>
-          <CCardBody className="indirect-body">
-            <CChartBar
+      {/* INDIRECT EVALUATION - Relevance */}
+      <CCard className="relevance-chart">
+        <CCardHeader className="indirect-header">
+          INDIRECT EVALUATION - Relevance
+        </CCardHeader>
+        <CCardBody className="indirect-body">
+          {relevanceData1 && (
+            <Bar
               data={relevanceData1}
               options={{
                 responsive: true,
-                plugins: { legend: { position: "top" } },
-                scales: { y: { min: 0, max: 100 } },
+                plugins: { legend: { position: "bottom" } },
+                scales: {
+                  y: { beginAtZero: true },
+                },
               }}
             />
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
+          )}
+        </CCardBody>
+      </CCard>
+
+      {/* INDIRECT EVALUATION - Performance */}
+      <CCard className="performance-chart">
+        <CCardHeader className="indirect-header">Model Performance</CCardHeader>
+        <CCardBody className="indirect-body">
+          {performance && (
+            <Bar
+              data={performance}
+              options={{
+                responsive: true,
+                plugins: { legend: { position: "bottom" } },
+                scales: {
+                  y: { beginAtZero: true },
+                },
+              }}
+            />
+          )}
+        </CCardBody>
+      </CCard>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { CChart } from "@coreui/react-chartjs";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   BarElement,
@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 
-// Đăng ký các thành phần cần thiết cho Bar chart
+// Đăng ký các thành phần cần thiết
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const LabelBarChart = ({ labelData }) => {
@@ -24,6 +24,9 @@ const LabelBarChart = ({ labelData }) => {
   }
 
   const pastelColors = ["#FFB3C1", "#A8D8FF", "#FFF3B0", "#B2F7EF", "#D3C0F9"];
+  const backgroundColors = labels.map(
+    (_, i) => pastelColors[i % pastelColors.length]
+  );
 
   const data = {
     labels,
@@ -31,8 +34,8 @@ const LabelBarChart = ({ labelData }) => {
       {
         label: "Proportion (%)",
         data: percentages,
-        backgroundColor: pastelColors.slice(0, labels.length),
-        borderColor: labels.map(() => "#000000"),
+        backgroundColor: backgroundColors,
+        borderColor: "#000000",
         borderWidth: 1.5,
         borderRadius: 4,
         barPercentage: 0.6,
@@ -49,7 +52,7 @@ const LabelBarChart = ({ labelData }) => {
         labels: {
           font: {
             family: "Inter",
-            size: 18,
+            size: 14,
             weight: "bold",
           },
         },
@@ -66,6 +69,10 @@ const LabelBarChart = ({ labelData }) => {
         max: 100,
         ticks: {
           callback: (value) => `${value}%`,
+          font: {
+            family: "Inter",
+            size: 12,
+          },
         },
         title: {
           display: true,
@@ -78,6 +85,12 @@ const LabelBarChart = ({ labelData }) => {
         },
       },
       x: {
+        ticks: {
+          font: {
+            family: "Inter",
+            size: 12,
+          },
+        },
         title: {
           display: true,
           text: "Labels",
@@ -92,9 +105,14 @@ const LabelBarChart = ({ labelData }) => {
   };
 
   return (
-    <div>
-      <h3 className="label-chart-title">Label Distribution</h3>
-      <CChart type="bar" data={data} options={options} />
+    <div style={{ padding: "20px", textAlign: "center" }}>
+      <h3
+        className="label-chart-title"
+        style={{ fontFamily: "Inter", fontWeight: "600", marginBottom: "20px" }}
+      >
+        Label Distribution
+      </h3>
+      <Bar data={data} options={options} />
     </div>
   );
 };
