@@ -238,7 +238,7 @@ const EvaluationDashboard = () => {
       {/* INDIRECT EVALUATION - Reliability */}
       <CCard className="reliability-chart">
         <CCardHeader className="indirect-header">
-          INDIRECT EVALUATION - Reliability
+          INDIRECT EVALUATION - Reliability - Accuracy + F1-Score
         </CCardHeader>
         <CCardBody className="indirect-body">
           {reliabilityData1 && (
@@ -259,7 +259,7 @@ const EvaluationDashboard = () => {
       {/* INDIRECT EVALUATION - Relevance */}
       <CCard className="relevance-chart">
         <CCardHeader className="indirect-header">
-          INDIRECT EVALUATION - Relevance
+          INDIRECT EVALUATION - Relevance - AUC-ROC
         </CCardHeader>
         <CCardBody className="indirect-body">
           {relevanceData1 && (
@@ -279,7 +279,7 @@ const EvaluationDashboard = () => {
 
       {/* INDIRECT EVALUATION - Performance */}
       <CCard className="performance-chart">
-        <CCardHeader className="indirect-header">Model Performance</CCardHeader>
+        <CCardHeader className="indirect-header">Model Performance - Macro - Weighted</CCardHeader>
         <CCardBody className="indirect-body">
           {performance && (
             <Bar
