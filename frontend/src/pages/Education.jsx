@@ -50,11 +50,8 @@ const Education = () => {
   }, []);
 
   return (
-    <div className="main-education">
+    <div className="main-education" style={{marginTop: "64px"}}>
       {/* SECTION 1: Header */}
-      <div className="header-education">
-        <h2 className="education-title">EDUCATION MANAGEMENT</h2>
-      </div>
       <div className="update-container">
         <CCol md={3}>
           <CButton className="text-end" color="success">

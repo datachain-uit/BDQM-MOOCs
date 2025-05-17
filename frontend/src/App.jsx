@@ -1,51 +1,61 @@
-import React from "react";
-import AppSidebar from "./components/AppSidebar";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Overview from "./pages/Overview";
-import './App.css'
-import Education from "./pages/Education";
-import { color } from "chart.js/helpers";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { CContainer } from '@coreui/react';
+import Sidebar from './components/layout/Sidebar';
+import Header from './components/layout/Header';
+import Overview from './pages/Overview';
+import Education from './pages/Education';
 import PersonalizedLearning from './pages/PersonalizedLearning';
+import ScrollToTopButton from './components/common/ScrollToTopButton';
 
-const App = () => {
+function MainLayout() {
+  const location = useLocation();
+
+  // Mapping URL path to title
+  const getTitle = (pathname) => {
+    switch (pathname) {
+      case '/':
+        return 'OVERVIEW DATASET';
+      case '/education':
+        return 'EDUCATION MANAGEMENT';
+      case '/learning':
+        return 'PERSIONALIZED LEARNING';
+      default:
+        return '';
+    }
+  };
+
+  const title = getTitle(location.pathname);
+
   return (
-    <Router>
-      <div className="flex h-screen">
-        {/* Sidebar */}
-        <div
-          style={{
-            position: 'fixed',
-            backgroundColor: '#C3DBED',
-            top: 0,
-            left: 0,
-            width: '255px', // Đảm bảo sidebar có chiều rộng cố định
-            height: '100vh', // Chiều cao 100% của màn hình
-            zIndex: 1000, // Để sidebar luôn ở trên
-          }}
-        >
-          <AppSidebar />
-        </div>
+    <div style={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Sidebar */}
+      <div style={{ width: '240px', flexShrink: 0, position: 'sticky', top: 0, height: '100vh' }}>
+        <Sidebar />
+      </div>
 
-        {/* Main content */}
-        <div
-          style={{
-            marginLeft: '250px', // Đẩy nội dung ra ngoài khi sidebar có sẵn
-            transition: 'margin-left 0.3s ease', // Thêm hiệu ứng khi sidebar mở/đóng
-            flex: 1,
-            paddingTop: 0, // Đảm bảo không bị che chắn bởi header
-            paddingLeft: '10px',
-            paddingRight: '10px',
-            paddingBottom: '10px',
-          }}
-        >
+      {/* Main Content */}
+      <main style={{ flexGrow: 1, overflowY: 'auto' }}>
+        <Header title={title} />
+        <CContainer>
           <Routes>
-            <Route path="/" element={<Overview/>} />
+            <Route path="/" element={<Overview />} />
             <Route path="/education" element={<Education />} />
             <Route path="/learning" element={<PersonalizedLearning />} />
           </Routes>
-        </div>
-      </div>
+        </CContainer>
+        <ScrollToTopButton />
+      </main>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <MainLayout />
     </Router>
   );
-};
+}
+
 export default App;

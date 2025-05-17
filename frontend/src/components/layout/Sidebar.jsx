@@ -28,7 +28,7 @@ function Sidebar() {
 
   return (
     <CSidebar className="vh-100" style={{ backgroundColor: 'rgba(195, 219, 237, 0.7)', width: '240px' }}>
-      <CSidebarBrand className="d-flex align-items-center px-3" style={{ height: '64px' }}>
+      <CSidebarBrand className="d-flex align-items-center px-3" style={{ height: '64px', backgroundColor: "#89BBDE" }}>
         <div
           style={{
             width: '45px',

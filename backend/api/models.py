@@ -44,4 +44,14 @@ class StudentPerformance(models.Model):
     
     class Meta:
         db_table = 'raw_data_education'
-    
+
+class RecommenderDataset(models.Model):
+    dataset_name = models.CharField(max_length=100)
+    dataset_info = models.JSONField(default=dict)
+    gender_rate = models.JSONField(null=True, blank=True)
+    top10field = models.JSONField(default=dict)
+    evaluation = models.JSONField(default=dict)
+    descriptiveStatistics = models.JSONField(default=dict)
+
+    class Meta:
+        db_table = 'recommender_dataset'

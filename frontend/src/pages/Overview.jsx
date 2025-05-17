@@ -88,10 +88,7 @@ const Overview = () => {
   };
 
   return (
-    <div className="content">
-      <div className="header-container">
-        <Header />
-      </div>
+    <div className="content" style={{ marginTop: "64px" }}>
       <div className="main-content-container">
         <div className="file-summary-container">
           <div className="title-file-summary">

@@ -3,7 +3,7 @@
  * Includes dataset information, descriptive statistics, gender/field distributions, and direct/indirect evaluations.
  */
 
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import {
   CButton,
   CRow,
@@ -21,7 +21,7 @@ import {
   CTableRow,
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
-import { cilMagnifyingGlass, cilLoopCircular } from '@coreui/icons';
+import { cilMagnifyingGlass, cilLoopCircular, cilSpreadsheet } from '@coreui/icons';
 import { Pie, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -60,10 +60,10 @@ const MemoizedBar = React.memo(({ data, options }) => <Bar data={data} options={
 // Map display keys to datasetInfo keys
 const keyMap = {
   'Row': 'row',
-  'Column': 'column',
-  'Unique row': 'uniqueRow',
-  'Missing values': 'missingValues',
-  'Data types': 'dataTypes',
+  'Column': 'col',
+  'Unique row': 'unique_row',
+  'Missing values': 'missing_value_rate',
+  'Data types': 'datatype',
 };
 
 
@@ -74,29 +74,81 @@ const PersonalizedLearning = () => {
   const [reliabilityMetric, setReliabilityMetric] = useState('@5');
   const [relevanceMetric, setRelevanceMetric] = useState('@5');
   const [selectedMetric, setSelectedMetric] = useState('completeness');
+  const [datasetInfo, setDatasetInfo] = useState({});
+  const [gender, setGender] = useState([]);
+  const [data, setData] = useState({});
+  const [models, setModels] = useState([]);
+  const [relevance5precision, setRelevance5Precision] = useState([]);
+  const [relevance10precision, setRelevance10Precision] = useState([]);
+  const [relevance5recall, setRelevance5Recall] = useState([]);
+  const [relevance10recall, setRelevance10Recall] = useState([]);
+  const [relevance5ndcg, setRelevance5NDCG] = useState([]);
+  const [relevance10ndcg, setRelevance10NDCG] = useState([]);
+  const [reliability10map, setReliability10MAP] = useState([]);
+  const [reliability5map, setReliability5MAP] = useState([]);
+  const [consistencyPassRate, setConsistencyPassRate] = useState(0);
+  const [completenessPassRate, setCompletenessPassRate] = useState(0);
+  const [statistics1, setDescriptiveStatistics1] = useState({});
+  const [statistics2, setDescriptiveStatistics2] = useState({});
+  const [statistics3, setDescriptiveStatistics3] = useState({});
+  const [statistics4, setDescriptiveStatistics4] = useState({});
+  const [statistics5, setDescriptiveStatistics5] = useState({});
 
-  // Static dataset information
-  const datasetInfo = {
-    row: 130000,
-    column: 16,
-    uniqueRow: 8,
-    missingValues: 10,
-    dataTypes: 'float, int, category, datetime',
-  };
-
+  useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await fetch("http://localhost:8000/api/recommender_datainfo/");
+          const result = await response.json(); 
+          console.log("API result:", result); 
+          const new_data = {
+            dataset_name: result.data[0].dataset_name,
+            dataset_info: result.data[0].dataset_info,
+            gender_rate: result.data[0].gender_rate,
+            top10fields: result.data[0].top10field.fields,
+            top10fields_count: result.data[0].top10field.count,
+          };
+          setData(new_data);
+          setDatasetInfo(result.data[0].dataset_info); // Assuming the API returns an array of objects
+          setGender(result.data[0].gender_rate); // Assuming the API returns an array of objects
+          setModels(result.data[0].evaluation.model); // Assuming the API returns an array of objects
+          setRelevance5Precision(result.data[0].evaluation.relevanceData.at5.precision)
+          setRelevance10Precision(result.data[0].evaluation.relevanceData.at10.precision)
+          setRelevance5Recall(result.data[0].evaluation.relevanceData.at5.recall)
+          setRelevance10Recall(result.data[0].evaluation.relevanceData.at10.recall)
+          setRelevance5NDCG(result.data[0].evaluation.relevanceData.at5.NDCG)
+          setRelevance10NDCG(result.data[0].evaluation.relevanceData.at10.NDCG)
+          setReliability5MAP(result.data[0].evaluation.reliabilityData.at5.MAP); // Assuming the API returns an array of objects
+          setReliability10MAP(result.data[0].evaluation.reliabilityData.at10.MAP); // Assuming the API returns an array of objects
+          setConsistencyPassRate(result.data[0].evaluation.consistencyData.overallPassRate); // Assuming the API returns an array of objects
+          setCompletenessPassRate(result.data[0].evaluation.completenessData.overallPaseRate); // Assuming the API returns an array of objects
+          setDescriptiveStatistics1(result.data[0].descriptiveStatistics.enroll_time);
+          setDescriptiveStatistics2(result.data[0].descriptiveStatistics.user_gender);
+          setDescriptiveStatistics3(result.data[0].descriptiveStatistics.course_total_comments);
+          setDescriptiveStatistics4(result.data[0].descriptiveStatistics.user_course_num_comment);
+          setDescriptiveStatistics5(result.data[0].descriptiveStatistics.user_course_num_replies);
+          console.log("API result:", result);
+          // console.log("data:", data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+  
+      fetchData();
+    }, []);
   // Descriptive statistics for sample columns
   const descriptiveStatistics = {
-    column1: { count: 13, mean: 5.5, std: 2.1, min: 1.0, '25%': 4.0, '50%': 5.5, '75%': 7.0, max: 10.0 },
-    column2: { count: 10, mean: 100.5, std: 15.3, min: 75.0, '25%': 90.0, '50%': 101.0, '75%': 112.0, max: 125.0 },
-    column3: { count: 13, mean: 5.5, std: 2.1, min: 1.0, '25%': 4.0, '50%': 5.5, '75%': 7.0, max: 10.0 },
-    column4: { count: 10, mean: 100.5, std: 15.3, min: 75.0, '25%': 90.0, '50%': 101.0, '75%': 112.0, max: 125.0 },
+    enroll_time: { count: statistics1[0], mean: statistics1[1], std: statistics1[2], min: statistics1[3], '25%': statistics1[4], '50%': statistics1[5], '75%': statistics1[6], max: statistics1[7] },
+    user_gender: { count: statistics2[0], mean: statistics2[1], std: statistics2[2], min: statistics2[3], '25%': statistics2[4], '50%': statistics2[5], '75%': statistics2[6], max: statistics2[7] },
+    course_total_comments: { count: statistics3[0], mean: statistics3[1], std: statistics3[3], min: statistics3[3], '25%': statistics3[4], '50%': statistics3[5], '75%': statistics3[6], max: statistics3[7] },
+    user_course_num_comment: { count: statistics4[0], mean: statistics4[1], std: statistics4[2], min: statistics4[3], '25%': statistics4[4], '50%': statistics4[5], '75%': statistics4[6], max: statistics4[7] },
+    user_course_num_replies: { count: statistics5[0], mean: statistics5[1], std: statistics5[2], min: statistics5[3], '25%': statistics5[4], '50%': statistics5[5], '75%': statistics5[6], max: statistics5[7] },
   };
 
   // Gender distribution pie chart data
   const genderData = {
     labels: ['Male', 'Female', 'Other'],
     datasets: [{
-      data: [50, 45, 5],
+      data: data.gender_rate,
       backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
       hoverBackgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
     }],
@@ -105,10 +157,10 @@ const PersonalizedLearning = () => {
 
   // Top 10 popular fields bar chart data
   const fieldsData = {
-    labels: ['Data Science', 'Web Dev', 'Mobile Dev', 'AI/ML', 'Cybersecurity', 'Cloud Computing', 'DevOps', 'UI/UX Design', 'Networking', 'Bus Analysis'],
+    labels: data.top10fields,
     datasets: [{
       label: 'Registrations',
-      data: [120, 100, 80, 300, 60, 55, 700, 45, 40, 35],
+      data: data.top10fields_count,
       backgroundColor: '#4BC0C0',
       borderColor: '#4BC0C0',
       borderWidth: 1,
@@ -117,33 +169,33 @@ const PersonalizedLearning = () => {
 
   // Reliability evaluation bar chart data
   const reliabilityData = {
-    '@5': { labels: ['CBF', 'DeepFM', 'BPRMF', 'KGAT'], datasets: [{ label: 'MAP', data: [65, 83, 87, 75], backgroundColor: '#0071BC' }] },
-    '@10': { labels: ['CBF', 'DeepFM', 'BPRMF', 'KGAT'], datasets: [{ label: 'MAP', data: [70, 80, 85, 78], backgroundColor: '#0071BC' }] },
+    '@5': { labels: models, datasets: [{ label: 'MAP', data: reliability5map, backgroundColor: '#0071BC' }] },
+    '@10': { labels: models, datasets: [{ label: 'MAP', data: reliability10map, backgroundColor: '#0071BC' }] },
   };
 
   // Relevance evaluation bar chart data
   const relevanceData = {
     '@5': {
-      labels: ['CBF', 'DeepFM', 'BPRMF', 'KGAT'],
+      labels: models,
       datasets: [
-        { label: 'Precision', data: [67, 84, 87, 75], backgroundColor: '#0071BC' },
-        { label: 'Recall', data: [82, 69, 71, 63], backgroundColor: '#34A853' },
-        { label: 'NDCG', data: [70, 72, 71, 69], backgroundColor: '#FF6600' },
+        { label: 'Precision', data: relevance5precision, backgroundColor: '#0071BC' },
+        { label: 'Recall', data: relevance5recall, backgroundColor: '#34A853' },
+        { label: 'NDCG', data: relevance5ndcg, backgroundColor: '#FF6600' },
       ],
     },
     '@10': {
       labels: ['CBF', 'DeepFM', 'BPRMF', 'KGAT'],
       datasets: [
-        { label: 'Precision', data: [69, 81, 85, 77], backgroundColor: '#0071BC' },
-        { label: 'Recall', data: [84, 70, 72, 64], backgroundColor: '#34A853' },
-        { label: 'NDCG', data: [73, 74, 73, 71], backgroundColor: '#FF6600' },
+        { label: 'Precision', data: relevance10precision, backgroundColor: '#0071BC' },
+        { label: 'Recall', data: relevance10recall, backgroundColor: '#34A853' },
+        { label: 'NDCG', data: relevance10ndcg, backgroundColor: '#FF6600' },
       ],
     },
   };
 
   // Completeness evaluation data
   const completenessData = {
-    overallPassRate: 100,
+    overallPassRate: completenessPassRate,
     definition: {
       title: 'Definition',
       text: {
@@ -163,7 +215,7 @@ const PersonalizedLearning = () => {
 
   // Consistency evaluation data
   const consistencyData = {
-    overallPassRate: 95,
+    overallPassRate: consistencyPassRate,
     criterionPassRates: [
       { name: 'Domain Range:', passRate: 100 },
       { name: 'Non-null:', passRate: 85 },
@@ -199,6 +251,8 @@ const PersonalizedLearning = () => {
 
   // Trigger dataset update (placeholder for API call)
   const handleUpdateDataset = () => alert('Đang cập nhật Dataset...');
+
+  const handleExportReport = () => alert('Exporting Report...')
 
   // Determine progress bar color based on percentage
   const getProgressColor = (percentage) => {
@@ -249,16 +303,29 @@ const PersonalizedLearning = () => {
   return (
     <div style={{ marginTop: 64, paddingTop: 8, paddingBottom: 12, fontFamily: 'Inter, sans-serif' }}>
       {/* Header with dataset update button and search bar */}
+            {/* Header with dataset update button and search bar */}
       <CRow className="align-items-center mb-3">
         <CCol xs="auto">
           <CButton
             onClick={handleUpdateDataset}
-            style={{ backgroundColor: '#009990', color: 'white', fontFamily: 'Inter, sans-serif', fontSize: 18, fontWeight: 600, borderColor: '#009990' }}
+            style={{ backgroundColor: '#009990', color: 'white', fontFamily: 'Inter, sans-serif', fontSize: 18, fontWeight: 600, borderColor: '#009990', display: 'flex', alignItems: 'center', }}
           >
             <CIcon icon={cilLoopCircular} style={{ width: 25, height: 25 }} className="me-2" />
             Update dataset
           </CButton>
         </CCol>
+        <CCol xs="auto">
+          <CButton
+            onClick={handleExportReport}
+            style={{
+              backgroundColor: '#0066cc', color: 'white', fontFamily: 'Inter, sans-serif', fontSize: 18,fontWeight: 600,borderColor: '#0066cc',display: 'flex',alignItems: 'center',
+            }}
+          >
+            <CIcon icon={cilSpreadsheet} style={{ width: 25, height: 25 }} className="me-2" />
+            Export Report
+          </CButton>
+        </CCol>
+
         <CCol>
           <CInputGroup>
             <CFormInput type="text" placeholder="Search..." value={searchTerm} onChange={handleSearchChange} />
