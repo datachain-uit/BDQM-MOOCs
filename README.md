@@ -26,7 +26,7 @@ It demonstrates how Business Intelligence (BI) techniques and machine learning m
 
 ## I. Research Objectives
 
-### **1. Group 1: Predicting Course Completion Outcomes & Data Quality Assessment**
+### **1. Predicting Course Completion Outcomes & Data Quality Assessment**
 
 * **Objective**: Build deep learning models to predict whether learners will complete online courses, while also evaluating the quality of the learning data.  
 * **Approach**:  
@@ -35,7 +35,7 @@ It demonstrates how Business Intelligence (BI) techniques and machine learning m
   * Apply data augmentation techniques to improve model robustness.  
   * Define and measure data quality through direct and indirect metrics.  
   * Analyze how data quality impacts model performance.  
-### **2. Group 2: Course Recommendation Systems On MOOCs & Data Quality Assessment**
+### **2. Course Recommendation Systems On MOOCs & Data Quality Assessment**
 
 * **Objective**: Develop a comprehensive framework for evaluating MOOCs recommendation systems, with particular emphasis on assessing data quality as a foundation for reliable model performance.
 * **Approach**:
@@ -53,7 +53,7 @@ It demonstrates how Business Intelligence (BI) techniques and machine learning m
 - Clean, normalize, and augment MOOCCubeX dataset.  
 - Merge multi-file sources into a unified structure.
 
-### 2. Group 1: 
+### 2. Predicting Course Completion Outcomes: 
 
 #### **Direct Quality Metrics**
 
@@ -88,7 +88,7 @@ It demonstrates how Business Intelligence (BI) techniques and machine learning m
   - **Precision, Recall, F1-score**: For multi-class classification.  
   - **Macro Average**: Gives equal weight to all classes.  
   - **Weighted Average**: Accounts for class imbalance based on class frequency.
-### 3. Group 2: 
+### 3. Course Recommendation Systems On MOOCs: 
 #### Direct Evaluation
 
 ##### Completeness
@@ -343,7 +343,6 @@ Specifically, it includes:
 
 ## IX. Contributors
 
-* Group 1 : Nguyễn Viết Kha \- Nguyễn Hoài Phương  
-* Group 2:  Đỗ Thành Đạt - Vi Thị Hương
-* Supervisor: M.Sc. IT. Nguyễn Thị Anh Thư
+* Leader: M.Sc. IT. Nguyễn Thị Anh Thư
+* Members : Nguyễn Viết Kha \- Nguyễn Hoài Phương, Đỗ Thành Đạt - Vi Thị Hương
 
