@@ -11,7 +11,7 @@ It demonstrates how Business Intelligence (BI) techniques and machine learning m
 
 <!-- This website is part of a project focusing on predicting learners' course completion outcomes using MOOC-CubeX data. It demonstrates how Business Intelligence (BI) techniques and machine learning models can support online education through real-time insights and early intervention. -->
 
-**DemoVideo**: https://drive.google.com/drive/folders/1AXezCvHdoyH_qqfTX6YcpZ29I4j0Rztt?usp=sharing
+**DemoVideo**: https://drive.google.com/file/d/1nAsxJNlD0bgHLglRVVKQx4e8BPzj0xZr/view?usp=drive_link
 
 ## Table of Contents
 
