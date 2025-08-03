@@ -159,6 +159,8 @@ We evaluate the F1-score at different cutoff thresholds (typically @5 and @10) t
 
 ## III. Architecture
 
+<img width="7905" height="2805" alt="Delta_BDA" src="https://github.com/user-attachments/assets/9242ca23-eacb-4886-94e1-69869d2b33ec" />
+
 ```
 ┌────────────────┐         ┌────────────────┐
 │                │         │                │
@@ -176,8 +178,6 @@ We evaluate the F1-score at different cutoff thresholds (typically @5 and @10) t
 │                │         │                │
 └────────────────┘         └────────────────┘
 ```
-
-<img width="7905" height="2805" alt="Delta_BDA" src="https://github.com/user-attachments/assets/9242ca23-eacb-4886-94e1-69869d2b33ec" />
 
 ## IV. Website Overview
 
