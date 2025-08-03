@@ -159,11 +159,11 @@ We evaluate the F1-score at different cutoff thresholds (typically @5 and @10) t
 
 ## III. Architecture
 
-### Option 1: Online
+### **1. Big Data Architecture for Lifecycle-Oriented Data Storage and Processing
 
 <img width="7905" height="2805" alt="Delta_BDA" src="https://github.com/user-attachments/assets/9242ca23-eacb-4886-94e1-69869d2b33ec" />
 
-### Option 2: Offline
+### **2. Demonstration System for Visualizing Processed Results via BI Web Interface
 ```
 ┌────────────────┐         ┌────────────────┐
 │                │         │                │
